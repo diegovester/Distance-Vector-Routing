@@ -6,6 +6,7 @@ class Node:
     def __str__(self):
         return f"{self.receiver} {self.cost}"
     
+    
 # convert list of strings to a list of ints
 def convert_to_ints(list):
     return [int(i) for i in list]
@@ -60,14 +61,39 @@ def initialize_tables(links):
     nodes = []
     temp_DV_table = []
     for x in range(1,7):
+        temp_DV_table.append(Node(x, 0))
         for link in links:
             if link[0] == x:
                 temp_DV_table.append(Node(link[1], link[2]))
+            
 
         nodes.append(temp_DV_table)
         #print(nodes)
         temp_DV_table = []
     return nodes
+
+# function to determine if the network is in a stable state
+def stable_state(nodes):
+    # COMPLETE
+    # check the DV table for each node
+    # if the DV table has changed, return false
+    # if the DV table has not changed, return true
+    pass
+
+# function to determine the current state of the network
+def current_state(nodes):
+    # COMPLETE
+    # print the current state of the network
+    # print the DV table for each node
+    for x in range(6):
+        print(f'Node {x+1}')
+        for link in nodes[x]:
+            print(link)
+        print('')
+    pass
+
+# function to connect the nodes with each other using sockets when they need to
+
         
 # COMPLETE
 # Select the input file
@@ -82,12 +108,11 @@ def initialize_tables(links):
 # Comments in code
 def main():
     network = read_network()
-    print_network(network)
-    #node1 = initialize_table("1", network)
-    #print(node1[0])
-    #print(node1[1])
+    #print_network(network)
     nodes = initialize_tables(network)
-    print(nodes[0][1])
+    #print(nodes[0][1])
+    current_state(nodes)
+        
     
 
 if __name__ == "__main__":
