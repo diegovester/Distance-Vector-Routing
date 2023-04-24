@@ -1,3 +1,5 @@
+
+
 class Node:
     def __init__(self, receiver, cost):
         self.receiver = receiver
@@ -184,11 +186,12 @@ def run_algorithm(nodes):
     print(total_time)
     previous_state = current_state(nodes)
     # run the distance vector algorithm
-    
-    while(x<6):
+    bool = True
+    while(bool):
         total_time = f'___ Hop: #{x+1} ___'
         print(total_time)
-        update_table(nodes, x)
+        for node in range(6):
+            update_table(nodes, node)
         x += 1
         new_state = current_state(nodes)
         if new_state == previous_state:
