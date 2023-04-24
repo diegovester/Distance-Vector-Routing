@@ -1,4 +1,7 @@
-
+# Diego Vester
+# 1001329342
+# 04/23/2023
+# CSE 4344-001
 
 class Node:
     def __init__(self, receiver, cost):
@@ -188,6 +191,7 @@ def run_algorithm(nodes):
     # run the distance vector algorithm
     bool = True
     while(bool):
+        print('')
         total_time = f'___ Hop: #{x+1} ___'
         print(total_time)
         for node in range(6):
@@ -195,11 +199,11 @@ def run_algorithm(nodes):
         x += 1
         new_state = current_state(nodes)
         if new_state == previous_state:
-            print("stable")
+            print("### stable ###")
             break
         else:
             previous_state = new_state
-            print("not stable")
+            print("### not stable ###")
 
         
     # if the network is not in a stable state, run the algorithm again
