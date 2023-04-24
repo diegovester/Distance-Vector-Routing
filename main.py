@@ -92,7 +92,61 @@ def current_state(nodes):
         print('')
     pass
 
-# function to connect the nodes with each other using sockets when they need to
+
+
+
+# distance vector algorithm
+# function to determine the next state of a specific node based on its neighboring nodes
+def next_state(nodes, node):
+    # COMPLETE
+    neighboring_links = []
+    # determine the next state of the network
+    # use the Bellman-Ford equation
+    # update the DV table for each node
+    for link in nodes[node]:
+        
+        for link2 in nodes[link.receiver-1]:
+            node1_link = [link.receiver, link.cost]
+            node2_link = [link2.receiver, link2.cost]
+            new_link = [node2_link[0], node1_link[1]+node2_link[1]]
+            #print(new_link)
+            neighboring_links.append(new_link)
+            #nodes[node].insert(new_link[0]-1, Node(new_link[0], new_link[1]))
+    
+                #node1_link = [2, 7]
+                #node2_link = [3, 1]
+                #new_link = [node2_link[0], node1_link[1]+node2_link[1]]
+                #print(nodes[0].insert(new_link[0]-1, Node(new_link[0], new_link[1])))
+    # return the next state of the network
+    return neighboring_links
+    pass
+
+def update_table(nodes, node):
+    # INCOMPLETE
+    # receive an update from another node
+    neighboring_links = next_state(nodes, node)
+    # update the DV table for the node
+    # loop over neighboring_links 
+    # if the node is in the DV table, and the new cost is less than the current, update the cost
+    # if the node is not in the DV table, add the node and cost
+    # if the node is in the DV table, and the new cost is greater than the current, do nothing
+    for link in nodes[node]:
+        for new_link in neighboring_links:
+            if link.receiver == new_link[0]:
+                if link.cost > new_link[1]:
+                    link.cost = new_link[1]
+
+
+    # if the DV table has changed, return false
+    pass
+
+# function to run the distance vector algorithm
+def run_algorithm(nodes):
+    # INCOMPLETE
+    # run the distance vector algorithm
+    # if the network is not in a stable state, run the algorithm again
+    # if the network is in a stable state, stop
+    pass
 
         
 # COMPLETE
@@ -108,10 +162,18 @@ def current_state(nodes):
 # Comments in code
 def main():
     network = read_network()
-    #print_network(network)
     nodes = initialize_tables(network)
-    #print(nodes[0][1])
-    current_state(nodes)
+    #current_state(nodes)
+    #node1_link = [2, 7]
+    #node2_link = [3, 1]
+    #new_link = [node2_link[0], node1_link[1]+node2_link[1]]
+    #print(nodes[0].insert(new_link[0]-1, Node(new_link[0], new_link[1])))
+
+    neighbor_nodes = next_state(nodes, 0)
+    print(neighbor_nodes)
+    
+
+
         
     
 
