@@ -6,6 +6,16 @@ class Node:
     def __str__(self):
         return f"{self.receiver} {self.cost}"
     
+    # reference: https://stackoverflow.com/questions/1227121/compare-object-instances-for-equality-by-their-attributes
+    #def __eq__(self,other):
+     #   if not isinstance(other, Node):
+      #      return NotImplemented
+
+       # return self.receiver == other.receiver and self.cost == other.cost
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    
     
 # convert list of strings to a list of ints
 def convert_to_ints(list):
@@ -72,29 +82,26 @@ def initialize_tables(links):
         temp_DV_table = []
     return nodes
 
-# function to determine if the network is in a stable state
-def stable_state(nodes):
-    # COMPLETE
-    # check the DV table for each node
-    # if the DV table has changed, return false
-    # if the DV table has not changed, return true
-    pass
+
 
 # function to determine the current state of the network
 def current_state(nodes):
     # COMPLETE
     # print the current state of the network
     # print the DV table for each node
+    DV_state=[]
     for x in range(6):
         print(f'Node {x+1}')
         for link in nodes[x]:
             print(link)
-        print('')
+            DV_state.append(link)
+        #print('')
+    return DV_state
     pass
 
 
 
-
+# sending DV to Neighbors
 # distance vector algorithm
 # function to determine the next state of a specific node based on its neighboring nodes
 def next_state(nodes, node):
@@ -104,8 +111,9 @@ def next_state(nodes, node):
     # use the Bellman-Ford equation
     # update the DV table for each node
     for link in nodes[node]:
-        
+        #print(link)
         for link2 in nodes[link.receiver-1]:
+            #print(link2)
             node1_link = [link.receiver, link.cost]
             node2_link = [link2.receiver, link2.cost]
             new_link = [node2_link[0], node1_link[1]+node2_link[1]]
@@ -121,29 +129,76 @@ def next_state(nodes, node):
     return neighboring_links
     pass
 
+# duplicates may be created in the neighboring_links array
+# duplicates would mess up the update_table function
+def remove_duplicates(neighboring_links):
+    new_links = []
+    for link in neighboring_links:
+        if link not in new_links:
+            new_links.append(link)
+    return new_links
+
 def update_table(nodes, node):
     # INCOMPLETE
     # receive an update from another node
     neighboring_links = next_state(nodes, node)
+    neighboring_links = remove_duplicates(neighboring_links)
     # update the DV table for the node
     # loop over neighboring_links 
     # if the node is in the DV table, and the new cost is less than the current, update the cost
     # if the node is not in the DV table, add the node and cost
     # if the node is in the DV table, and the new cost is greater than the current, do nothing
-    for link in nodes[node]:
-        for new_link in neighboring_links:
+
+    temp_list = []
+    for new_link in neighboring_links:
+        for link in nodes[node]:
             if link.receiver == new_link[0]:
                 if link.cost > new_link[1]:
                     link.cost = new_link[1]
-
+                temp_list.append(new_link)
+    
+    clean_list = []
+    for link in neighboring_links:
+        if link not in temp_list:
+            clean_list.append(link)
+    
+    for new_link in clean_list:
+       nodes[node].insert(new_link[0]-1, Node(new_link[0], new_link[1]))
 
     # if the DV table has changed, return false
+    pass
+
+# function to check if the network is in a stable state
+def stable_state(nodes):
+    # INCOMPLETE
+    # check if the network is in a stable state
+    # if the network is in a stable state, return true
+    # if the network is not in a stable state, return false
     pass
 
 # function to run the distance vector algorithm
 def run_algorithm(nodes):
     # INCOMPLETE
+    x = 0
+    total_time = f'___ Hop: #{x} ___'
+    print(total_time)
+    previous_state = current_state(nodes)
     # run the distance vector algorithm
+    
+    while(x<6):
+        total_time = f'___ Hop: #{x+1} ___'
+        print(total_time)
+        update_table(nodes, x)
+        x += 1
+        new_state = current_state(nodes)
+        if new_state == previous_state:
+            print("stable")
+            break
+        else:
+            previous_state = new_state
+            print("not stable")
+
+        
     # if the network is not in a stable state, run the algorithm again
     # if the network is in a stable state, stop
     pass
@@ -152,30 +207,24 @@ def run_algorithm(nodes):
 # COMPLETE
 # Select the input file
 # Initial DV tables set up in GUI
+# Runs algorithm correctly in single step mode - record DVs
+# change a link cost and run from the previous state
+# Systems detect a stable state
+# runs algorithm without stopping - displays time
+# Comments in code
 
 # INCOMPLETE
-# Systems detect a stable state
-# Runs algorithm correctly in single step mode - record DVs
-# runs algorithm without stopping - displays time
-# change a link cost and run from the previous state
 # Writeup - include all elements discussed above
-# Comments in code
+
 def main():
     network = read_network()
     nodes = initialize_tables(network)
-    #current_state(nodes)
-    #node1_link = [2, 7]
-    #node2_link = [3, 1]
-    #new_link = [node2_link[0], node1_link[1]+node2_link[1]]
-    #print(nodes[0].insert(new_link[0]-1, Node(new_link[0], new_link[1])))
+    run_algorithm(nodes)
+    
 
-    neighbor_nodes = next_state(nodes, 0)
-    print(neighbor_nodes)
     
 
 
-        
-    
 
 if __name__ == "__main__":
     main()
